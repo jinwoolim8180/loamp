@@ -49,8 +49,7 @@ class AMP_Stage(nn.Module):
 
     def forward(self, x, y, h, measurement):
         z = y - F.conv2d(x, measurement, stride=self.scale)
-        with torch.autograd.set_detect_anomaly(True):
-            h_t = self.basis(self.onsager(z, h))
-            z += h_t
+        h_t = self.basis(self.onsager(z, h))
+        z += h_t
         out = self.eta(self.alpha.unsqueeze(1) * F.conv_transpose2d(z, measurement, stride=self.scale) + x)
         return out, h_t

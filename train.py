@@ -43,30 +43,31 @@ def main(args):
     best_loss = 100
 
     for epoch in range(args.epoch):
-        pbar = tqdm(train_dataloader)
-        for i, data in enumerate(pbar):
-            x = data.view(-1, args.in_channels, args.patch_size, args.patch_size)
-            x = x.to(device)
-            x_hat = model(x)
-            l = loss(x, x_hat)
+        with torch.autograd.set_detect_anomaly(True):
+            pbar = tqdm(train_dataloader)
+            for i, data in enumerate(pbar):
+                x = data.view(-1, args.in_channels, args.patch_size, args.patch_size)
+                x = x.to(device)
+                x_hat = model(x)
+                l = loss(x, x_hat)
 
-            optimizer.zero_grad()
-            l.backward()
-            optimizer.step()
-            pbar.set_description("Epoch {0} - Loss: {1}".format(epoch + 1, l))
+                optimizer.zero_grad()
+                l.backward()
+                optimizer.step()
+                pbar.set_description("Epoch {0} - Loss: {1}".format(epoch + 1, l))
 
-        # if (epoch + 1) % args.test_cycle == 0:
-        #     l = 0
-        #     for i, data in enumerate(tqdm(val_dataloader)):
-        #         x = data.view(-1, args.in_channels, args.patch_size, args.patch_size)
-        #         x = x.to(device)
-        #         x_hat = model(x)
-        #         l += loss(x, x_hat)
-        #     l /= len(val_dataloader)
-        #     print("Validation loss: {}".format(l))
-        #
-        #     if l < best_loss:
-            save_model(args, model)
+            # if (epoch + 1) % args.test_cycle == 0:
+            #     l = 0
+            #     for i, data in enumerate(tqdm(val_dataloader)):
+            #         x = data.view(-1, args.in_channels, args.patch_size, args.patch_size)
+            #         x = x.to(device)
+            #         x_hat = model(x)
+            #         l += loss(x, x_hat)
+            #     l /= len(val_dataloader)
+            #     print("Validation loss: {}".format(l))
+            #
+            #     if l < best_loss:
+                save_model(args, model)
 
 
 if __name__ == '__main__':
