@@ -29,12 +29,13 @@ class SlowDataset(Dataset):
         if not os.path.exists(self.bin_image_folder): os.makedirs(self.bin_image_folder, exist_ok=True)
         self.ext = '/*%s' % ext
         self.file_names = glob.glob(self.image_folder + self.ext)
+        self.ext_str = ext
         self.bin_file_names = list()
         self.prepare_cache()
 
     def prepare_cache(self):
         for fname in self.file_names:
-            bin_fname = fname.replace(self.image_folder, self.bin_image_folder).replace(self.ext, '.npy')
+            bin_fname = fname.replace(self.image_folder, self.bin_image_folder).replace(self.ext_str, '.npy')
             self.bin_file_names.append(bin_fname)
             if not os.path.exists(bin_fname):
                 img = imageio.imread(fname)
