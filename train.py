@@ -41,9 +41,10 @@ def main(args):
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     loss = nn.MSELoss()
     best_loss = 100
+    pbar = tqdm(train_dataloader)
 
     for epoch in range(args.epoch):
-        for i, data in enumerate(pbar := tqdm(train_dataloader)):
+        for i, data in enumerate(pbar):
             x = data.view(-1, args.in_channels, args.patch_size, args.patch_size)
             x = x.to(device)
             x_hat = model(x)
