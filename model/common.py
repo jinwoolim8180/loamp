@@ -36,3 +36,17 @@ class ResidualBlock(nn.Module):
 
     def forward(self, x):
         return x + self.module(x)
+
+
+class RNNCell(nn.Module):
+    """
+    RNN Cell for Onsager term
+    """
+    def __init__(self, n_channels):
+        super(RNNCell, self).__init__()
+        self.W_x = nn.Conv2d(n_channels, n_channels, kernel_size=1)
+        self.W_h = nn.Conv2d(n_channels, n_channels, kernel_size=1)
+        self.act = nn.Tanh()
+
+    def forward(self, x, h):
+        return self.act(self.W_x(x) + self.W_h(h))

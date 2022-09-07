@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from model.common import BasicBlock, ResidualBlock
+from model.common import BasicBlock, ResidualBlock, RNNCell
 
 
 class LOAMP(nn.Module):
@@ -44,11 +44,12 @@ class AMP_Stage(nn.Module):
             ResidualBlock(n_channels),
             BasicBlock(n_channels, in_channels)
         )
-        self.onsager = BasicBlock(2 * cs_channels, cs_channels, kernel_size=1, norm=False)
+        self.onsager = RNNCell(cs_channels)
+        self.basis = nn.Conv2d(cs_channels, cs_channels, kernel_size=1, bias=False)
 
     def forward(self, x, y, h, measurement):
         z = y - F.conv2d(x, measurement, stride=self.scale)
-        h_t = self.onsager(torch.cat([z, h], dim=1))
+        h_t = self.basis(self.onsager(z, h))
         z += h_t
         out = self.eta(self.alpha.unsqueeze(1) * F.conv_transpose2d(z, measurement, stride=self.scale) + x)
         return out, h_t
