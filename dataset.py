@@ -20,14 +20,14 @@ def rgb2ycbcr(rgb):
 
 
 class SlowDataset(Dataset):
-    def __init__(self, args, data_dir, training=True):
+    def __init__(self, args, data_dir, ext, training=True):
         super(SlowDataset, self).__init__()
         self.args = args
         self.training = training
         self.image_folder = os.path.join('.', data_dir)
         self.bin_image_folder = os.path.join('.', data_dir+'bin')
         if not os.path.exists(self.bin_image_folder): os.makedirs(self.bin_image_folder, exist_ok=True)
-        self.ext = '/*%s' % args.ext
+        self.ext = '/*%s' % ext
         self.file_names = glob.glob(self.image_folder + self.ext)
         self.bin_file_names = list()
         self.prepare_cache()

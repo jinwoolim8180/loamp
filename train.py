@@ -31,8 +31,8 @@ def main(args):
         load_model(args, model)
     model.train()
 
-    train_dataset = SlowDataset(args, args.train_dir, training=True)
-    val_dataset = SlowDataset(args, args.val_dir)
+    train_dataset = SlowDataset(args, args.train_dir, args.ext, training=True)
+    val_dataset = SlowDataset(args, args.val_dir, '.tif', args.val_dir)
     train_dataloader = DataLoader(dataset=train_dataset, batch_size=args.batch_size,
                                   num_workers=args.num_workers, shuffle=True)
     val_dataloader = DataLoader(dataset=val_dataset, batch_size=args.batch_size,
