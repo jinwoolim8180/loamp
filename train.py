@@ -57,7 +57,7 @@ def main(args):
 
         if (epoch + 1) % args.test_cycle == 0:
             l = 0
-            for i, data in enumerate(pbar := tqdm(val_dataloader)):
+            for i, data in enumerate(tqdm(val_dataloader)):
                 x = data.view(-1, args.in_channels, args.patch_size, args.patch_size)
                 x = x.to(device)
                 x_hat = model(x)
