@@ -2,7 +2,7 @@ import os
 import torch
 import torch.nn as nn
 import numpy as np
-from tqdm import tqdm
+from tqdm.auto import tqdm
 from torch.utils.data import DataLoader
 from argparse import ArgumentParser
 
