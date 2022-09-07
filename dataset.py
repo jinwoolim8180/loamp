@@ -34,7 +34,7 @@ class SlowDataset(Dataset):
 
     def prepare_cache(self):
         for fname in self.file_names:
-            bin_fname = fname.replace(self.image_folder, self.bin_image_folder).replace(self.args.ext, '.npy')
+            bin_fname = fname.replace(self.image_folder, self.bin_image_folder).replace(self.ext, '.npy')
             self.bin_file_names.append(bin_fname)
             if not os.path.exists(bin_fname):
                 img = imageio.imread(fname)
