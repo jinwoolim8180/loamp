@@ -35,8 +35,8 @@ def main(args):
     val_dataset = SlowDataset(args, args.val_dir)
     train_dataloader = DataLoader(dataset=train_dataset, batch_size=args.batch_size,
                                   num_workers=args.num_workers, shuffle=True)
-    # val_dataloader = DataLoader(dataset=val_dataset, batch_size=args.batch_size,
-    #                             num_workers=args.num_workers, shuffle=True)
+    val_dataloader = DataLoader(dataset=val_dataset, batch_size=args.batch_size,
+                                num_workers=args.num_workers, shuffle=True)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
     loss = nn.MSELoss()

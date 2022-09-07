@@ -38,7 +38,7 @@ class AMP_Stage(nn.Module):
         self.n_channels = n_channels
         self.scale = scale
         self.lamda = lamda
-        self.alpha = nn.Parameter(torch.ones(1))
+        self.alpha = nn.Parameter(torch.ones(1), requires_grad=True)
         self.eta = nn.Sequential(
             BasicBlock(in_channels, n_channels),
             ResidualBlock(n_channels),
