@@ -46,10 +46,7 @@ class RNNCell(nn.Module):
     """
     def __init__(self, n_channels):
         super(RNNCell, self).__init__()
-        self.W_x = nn.Conv2d(n_channels, n_channels, kernel_size=1)
         self.W_h = nn.Conv2d(n_channels, n_channels, kernel_size=1)
 
     def forward(self, x, h):
-        y = copy.deepcopy(x)
-        out = F.tanh(self.W_x(y) + self.W_h(h))
-        return out
+        return F.tanh(x + self.W_h(h))
