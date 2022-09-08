@@ -1,6 +1,6 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import copy
 
 
 class BasicBlock(nn.Module):
@@ -46,7 +46,7 @@ class RNNCell(nn.Module):
     """
     def __init__(self, n_channels):
         super(RNNCell, self).__init__()
-        self.W_h = nn.Conv2d(n_channels, n_channels, kernel_size=1)
+        self.W = nn.Conv2d(2 * n_channels, n_channels, kernel_size=1)
 
     def forward(self, x, h):
-        return F.tanh(x + self.W_h(h))
+        return F.tanh(self.W(torch.cat([x, h], dim=1)))
