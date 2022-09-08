@@ -15,7 +15,7 @@ def load_model(args, model):
 
 
 def save_model(args, model):
-    torch.save(model.state_dict(), "./{}/best_model.pkl" % args.model_dir)
+    torch.save(model.state_dict(), "./{}/best_model.pkl".format(args.model_dir))
 
 
 def main(args):
