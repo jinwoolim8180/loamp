@@ -49,4 +49,5 @@ class RNNCell(nn.Module):
         self.W_h = nn.Conv2d(n_channels, n_channels, kernel_size=1)
 
     def forward(self, x, h):
-        return F.tanh(self.W_x(x) + self.W_h(h))
+        out = F.tanh(self.W_x(x) + self.W_h(h))
+        return out
