@@ -49,6 +49,6 @@ class RNNCell(nn.Module):
         self.act = nn.Tanh()
 
     def forward(self, x, h):
-        tmp1 = self.W_x(x)
+        # tmp1 = self.W_x(x)
         tmp2 = self.W_h(h)
-        return self.act(tmp1 + tmp2)
+        return self.act(x + tmp2)
