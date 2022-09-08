@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class BasicBlock(nn.Module):
@@ -46,9 +47,6 @@ class RNNCell(nn.Module):
         super(RNNCell, self).__init__()
         self.W_x = nn.Conv2d(n_channels, n_channels, kernel_size=1)
         self.W_h = nn.Conv2d(n_channels, n_channels, kernel_size=1)
-        self.act = nn.Tanh()
 
     def forward(self, x, h):
-        # tmp1 = self.W_x(x)
-        tmp2 = self.W_h(h)
-        return self.act(x + tmp2)
+        return F.tanh(self.W_x(x) + self.W_h(h))
