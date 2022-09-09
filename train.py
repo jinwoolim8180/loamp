@@ -11,7 +11,7 @@ from model.amp import LOAMP
 
 
 def load_model(args, model):
-    model.load_state_dict(torch.load("./{}/best_model.pkl" % args.model_dir))
+    model.load_state_dict(torch.load("./{}/best_model.pkl".format(args.model_dir)))
 
 
 def save_model(args, model):
