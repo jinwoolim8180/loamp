@@ -28,6 +28,7 @@ def main(args):
     model = nn.DataParallel(model)
     model = model.to(device)
     if args.resume_train:
+        print(args.resume_train)
         load_model(args, model)
     model.train()
 
