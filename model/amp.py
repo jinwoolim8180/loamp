@@ -35,9 +35,11 @@ class LOAMP(nn.Module):
     def forward(self, x):
         y = F.conv2d(x, self.measurement, stride=self.scale)
         out = self.transpose(y)
+        z = torch.zeros_like(y).to(x.device)
         h = torch.zeros_like(y).to(x.device)
         for i in range(self.stages):
-            z = y - F.conv2d(x, self.measurement, stride=self.scale)
+            z *= 0.1
+            z += y - F.conv2d(x, self.measurement, stride=self.scale)
             # h = self.onsager(z, h)
             # z += h
             out = self.eta(self.transpose(z) + x)
