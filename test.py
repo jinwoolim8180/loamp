@@ -36,7 +36,8 @@ def main(args):
         psnr_loss = 0
         ssim_loss = 0
         num = 0
-        for i, data in enumerate(pbar := tqdm(test_dataloader)):
+        pbar = tqdm(test_dataloader)
+        for i, data in enumerate(pbar):
             x = data.view(-1, args.in_channels, args.patch_size, args.patch_size)
             x = x.to(device)
             x_hat = model(x)
