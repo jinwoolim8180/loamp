@@ -36,7 +36,7 @@ class LOAMP(nn.Module):
         out = self.transpose(y)
         for i in range(self.stages):
             z = y - F.conv2d(x, self.measurement, stride=self.scale)
-            out = self.eta(self.alpha.unsqueeze(1) * self.transpose(z) + x)
+            out = self.eta(self.transpose(z) + x)
         return out
 
 
