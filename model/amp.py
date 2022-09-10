@@ -26,10 +26,11 @@ class LOAMP(nn.Module):
         self.eta = nn.Sequential(
             BasicBlock(in_channels, n_channels),
             ResidualBlock(n_channels),
+            ResidualBlock(n_channels),
             BasicBlock(n_channels, in_channels)
         )
-        self.onsager = RNNCell(cs_channels)
-        self.basis = nn.Conv2d(cs_channels, cs_channels, kernel_size=1, bias=False)
+        # self.onsager = RNNCell(cs_channels)
+        # self.basis = nn.Conv2d(cs_channels, cs_channels, kernel_size=1, bias=False)
 
     def forward(self, x):
         y = F.conv2d(x, self.measurement, stride=self.scale)
@@ -37,8 +38,8 @@ class LOAMP(nn.Module):
         h = torch.zeros_like(y).to(x.device)
         for i in range(self.stages):
             z = y - F.conv2d(x, self.measurement, stride=self.scale)
-            h = self.onsager(z, h)
-            z += h
+            # h = self.onsager(z, h)
+            # z += h
             out = self.eta(self.transpose(z) + x)
         return out
 
