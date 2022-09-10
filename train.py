@@ -85,7 +85,7 @@ if __name__ == '__main__':
     parser.add_argument('--val_dir', type=str, default='data/val', help='testing data directory')
     parser.add_argument('--rgb_range', type=int, default=1, help='value range 1 or 255')
     parser.add_argument('--in_channels', type=int, default=1, help='1 for gray, 3 for color')
-    parser.add_argument('--n_channels', type=int, default=64, help='channels for deep learning')
+    parser.add_argument('--n_channels', type=int, default=32, help='channels for deep learning')
     parser.add_argument('--patch_size', type=int, default=33, help='from {1, 4, 10, 25, 40, 50}')
 
     parser.add_argument('--model_dir', type=str, default='model', help='trained or pre-trained model directory')
