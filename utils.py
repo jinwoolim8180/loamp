@@ -66,7 +66,7 @@ class SSIM(torch.nn.Module):
         super(SSIM, self).__init__()
         self.win = fspecial_gauss(11, 1.5, channels)
 
-    def forward(self, X, Y, as_loss=True):
+    def forward(self, X, Y, as_loss=False):
         assert X.shape == Y.shape
         if as_loss:
             score = ssim(X, Y, win=self.win)
