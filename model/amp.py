@@ -37,8 +37,8 @@ class LOAMP(nn.Module):
         h = torch.zeros_like(y).to(x.device)
         for i in range(self.stages):
             z = y - F.conv2d(x, self.measurement, stride=self.scale)
-            # h = self.onsager(z, h)
-            # z += self.basis(h)
+            h = self.onsager(z, h)
+            z += h
             out = self.eta(self.transpose(z) + x)
         return out
 

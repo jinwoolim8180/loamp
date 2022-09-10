@@ -49,4 +49,4 @@ class RNNCell(nn.Module):
         self.W = nn.Conv2d(2 * n_channels, n_channels, kernel_size=1)
 
     def forward(self, x, h):
-        return F.tanh(self.W(torch.cat([x, h], dim=1)))
+        return self.W(torch.cat([x, h], dim=1))
