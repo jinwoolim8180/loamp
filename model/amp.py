@@ -19,15 +19,24 @@ class LOAMP(nn.Module):
         self.measurement = nn.Parameter(
             torch.randn(cs_channels, scale * scale * in_channels)
             .contiguous().view(cs_channels, in_channels, scale, scale), requires_grad=False)
+        self.transpose = nn.Sequential(
+            nn.Conv2d(cs_channels, in_channels * scale * scale, kernel_size=1),
+            nn.PixelShuffle(scale)
+        )
+        self.eta = nn.Sequential(
+            BasicBlock(in_channels, n_channels),
+            ResidualBlock(n_channels),
+            ResidualBlock(n_channels),
+            BasicBlock(n_channels, in_channels)
+        )
         self.amp_stage = AMP_Stage(in_channels, cs_channels, n_channels, scale=scale)
 
     def forward(self, x):
         y = F.conv2d(x, self.measurement, stride=self.scale)
-        out = F.conv_transpose2d(y, self.measurement, stride=self.scale)
-
-        h = torch.zeros_like(y).to(y.device)
+        out = self.transpose(y)
         for i in range(self.stages):
-            out, h = self.amp_stage(out, y, h, self.measurement)
+            z = y - F.conv2d(x, self.measurement, stride=self.scale)
+            out = self.eta(self.alpha.unsqueeze(1) * self.transpose(z) + x)
         return out
 
 
