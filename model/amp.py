@@ -39,6 +39,10 @@ class AMP_Stage(nn.Module):
         self.scale = scale
         self.lamda = lamda
         self.alpha = nn.Parameter(torch.ones(1), requires_grad=True)
+        self.transpose = nn.Sequential(
+            nn.Conv2d(cs_channels, in_channels * scale * scale, kernel_size=1),
+            nn.PixelShuffle(scale)
+        )
         self.eta = nn.Sequential(
             BasicBlock(in_channels, n_channels),
             ResidualBlock(n_channels),
@@ -53,5 +57,5 @@ class AMP_Stage(nn.Module):
         # h_t = self.onsager(z, h)
         # z += self.basis(h_t)
         h_t = None
-        out = self.eta(self.alpha.unsqueeze(1) * F.conv_transpose2d(z, measurement, stride=self.scale) + x)
+        out = self.eta(self.alpha.unsqueeze(1) * self.transpose(z) + x)
         return out, h_t
