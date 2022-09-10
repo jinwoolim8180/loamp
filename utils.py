@@ -74,4 +74,4 @@ class SSIM(torch.nn.Module):
         else:
             with torch.no_grad():
                 score = ssim(X, Y, win=self.win)
-            return score
+            return score.mean()
