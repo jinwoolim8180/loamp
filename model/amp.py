@@ -53,5 +53,5 @@ class AMP_Stage(nn.Module):
         # h_t = self.onsager(z, h)
         # z += self.basis(h_t)
         h_t = None
-        out = (self.alpha.unsqueeze(1) * F.conv_transpose2d(z, measurement, stride=self.scale) + x)
+        out = self.eta(self.alpha.unsqueeze(1) * F.conv_transpose2d(z, measurement, stride=self.scale) + x)
         return out, h_t
