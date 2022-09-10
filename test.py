@@ -27,7 +27,7 @@ def main(args):
     load_model(args, model)
     model.eval()
 
-    test_dataset = SlowDataset(args, '.tif', args.test_dir + "/" + args.test_name)
+    test_dataset = SlowDataset(args, '.tif', 'data/test/Set11')
     test_dataloader = DataLoader(dataset=test_dataset, batch_size=args.batch_size, num_workers=args.num_workers)
 
     ssim = SSIM(args.in_channels)
