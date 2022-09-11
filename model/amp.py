@@ -29,7 +29,7 @@ class LOAMP(nn.Module):
                     BasicBlock(cs_channels, n_channels, kernel_size=1),
                     ResidualBlock(n_channels, kernel_size=1),
                     ResidualBlock(n_channels, kernel_size=1),
-                    BasicBlock(n_channels, cs_channels, kernel_size=)
+                    BasicBlock(n_channels, cs_channels, kernel_size=1)
                 )
             )
 
