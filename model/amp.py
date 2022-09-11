@@ -26,10 +26,10 @@ class LOAMP(nn.Module):
         for i in range(self.stages):
             self.eta.append(
                 nn.Sequential(
-                    BasicBlock(cs_channels, n_channels, kernel_size=1),
-                    ResidualBlock(n_channels, kernel_size=1),
-                    ResidualBlock(n_channels, kernel_size=1),
-                    BasicBlock(n_channels, cs_channels, kernel_size=1)
+                    BasicBlock(cs_channels, n_channels, kernel_size=1, norm=False),
+                    ResidualBlock(n_channels, kernel_size=1, norm=False),
+                    ResidualBlock(n_channels, kernel_size=1, norm=False),
+                    BasicBlock(n_channels, cs_channels, kernel_size=1, norm=False)
                 )
             )
 
