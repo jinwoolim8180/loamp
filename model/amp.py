@@ -43,5 +43,5 @@ class LOAMP(nn.Module):
             # z *= self.cs_channels / (self.cs_channels * self.scale * self.scale)
             z = y - F.conv2d(out, phi, stride=self.scale)
             out = out + self.shuffle(F.conv2d(z, self.transpose.to(z.device)))
-            out = out + self.eta[i](out)
+            out = x + self.eta[i](out)
         return out
