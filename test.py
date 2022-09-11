@@ -9,6 +9,7 @@ from argparse import ArgumentParser
 from dataset import SlowDataset
 from model.amp import LOAMP
 from utils import SSIM, psnr
+from torchvision.utils import save_image
 
 
 def load_model(args, model):
@@ -49,6 +50,8 @@ def main(args):
             mse_loss += mse(x, x_hat)
 
             num += 1
+            if i in range(20):
+                save_image(x_hat[0], "./{0}/img_{1}.png".format(args.model_dir, i))
 
             pbar.set_description("PSNR: {0}, SSIM: {1}".format(psnr_loss, ssim_loss))
 
