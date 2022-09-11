@@ -27,8 +27,6 @@ class LOAMP(nn.Module):
             self.eta.append(
                 nn.Sequential(
                     BasicBlock(cs_channels, n_channels, kernel_size=1, norm=False),
-                    ResidualBlock(n_channels, kernel_size=1, norm=False),
-                    ResidualBlock(n_channels, kernel_size=1, norm=False),
                     BasicBlock(n_channels, cs_channels, kernel_size=1, norm=False)
                 )
             )
