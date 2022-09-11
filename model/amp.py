@@ -34,14 +34,14 @@ class LOAMP(nn.Module):
         self.onsager = RNNCell(cs_channels)
 
     def forward(self, x):
-        y = F.conv2d(x, self.measurement.contiguous()
-                     .view(self.cs_channels, self.in_channels, self.scale, self.scale),
-                     stride=self.scale)
+        phi = self.measurement.contiguous()\
+            .view(self.cs_channels, self.in_channels, self.scale, self.scale)
+        y = F.conv2d(x, phi, stride=self.scale)
         out = self.shuffle(F.conv2d(y, self.transpose.to(y.device)))
         h = torch.zeros_like(y).to(x.device)
         for i in range(self.stages):
-            z = y - F.conv2d(x, self.measurement, stride=self.scale)
+            z = y - F.conv2d(x, phi, stride=self.scale)
             h = self.onsager(z, h)
             z += h
-            out = self.eta[i](self.shuffle(F.conv2d(z, self.transpose)) + x)
+            out = self.eta[i](self.shuffle(F.conv2d(z, self.transpose.to(z.device))) + x)
         return out
