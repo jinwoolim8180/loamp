@@ -23,7 +23,6 @@ class LOAMP(nn.Module):
         self.transpose = self.measurement.t().contiguous().view(scale * scale, cs_channels, 1, 1)
         self.shuffle = nn.PixelShuffle(scale)
         self.eta = nn.ModuleList([])
-        self.att = BasicBlock(in_channels, in_channels)
         for i in range(self.stages):
             self.eta.append(
                 nn.Sequential(
@@ -40,10 +39,9 @@ class LOAMP(nn.Module):
         y = F.conv2d(x, phi, stride=self.scale)
         out = self.shuffle(F.conv2d(y, self.transpose.to(y.device)))
         z = torch.zeros_like(y).to(x.device)
-        attention = torch.ones_like(x).to(x.device)
         for i in range(self.stages):
-            # z *= self.cs_channels / (self.cs_channels * self.scale * self.scale)
-            z = y - F.conv2d(attention * x, phi, stride=self.scale)
+            z *= self.cs_channels / (self.cs_channels * self.scale * self.scale)
+            z += y - F.conv2d(x, phi, stride=self.scale)
             out = self.shuffle(F.conv2d(z, self.transpose.to(z.device))) + x
             out = out + self.eta[0](out)
         return out
