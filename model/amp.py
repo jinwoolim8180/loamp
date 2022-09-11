@@ -12,17 +12,16 @@ class LOAMP(nn.Module):
     """
     def __init__(self, in_channels, cs_channels, n_channels, stages, scale):
         super(LOAMP, self).__init__()
+        self.in_channels = in_channels
+        self.cs_channels = cs_channels
         self.n_channels = n_channels
         self.stages = stages
         self.scale = scale
 
-        self.measurement = nn.Parameter(
-            torch.randn(cs_channels, scale * scale * in_channels)
-            .contiguous().view(cs_channels, in_channels, scale, scale), requires_grad=False)
-        self.transpose = nn.Sequential(
-            nn.Conv2d(cs_channels, in_channels * scale * scale, kernel_size=1),
-            nn.PixelShuffle(scale)
-        )
+        self.measurement = nn.Parameter(torch.randn(cs_channels, scale * scale * in_channels),
+                                        requires_grad=False)
+        self.transpose = self.measurement.t().contiguous().view(scale * scale, cs_channels, 1, 1)
+        self.shuffle = nn.PixelShuffle(scale)
         self.eta = nn.ModuleList([])
         for i in range(self.stages):
             self.eta.append(
@@ -35,13 +34,14 @@ class LOAMP(nn.Module):
         self.onsager = RNNCell(cs_channels)
 
     def forward(self, x):
-        y = F.conv2d(x, self.measurement, stride=self.scale)
-        out = self.transpose(y)
-        z = torch.zeros_like(y).to(x.device)
+        y = F.conv2d(x, self.measurement.contiguous()
+                     .view(self.cs_channels, self.in_channels, self.scale, self.scale),
+                     stride=self.scale)
+        out = self.shuffle(F.conv2d(y, self.transpose))
         h = torch.zeros_like(y).to(x.device)
         for i in range(self.stages):
             z = y - F.conv2d(x, self.measurement, stride=self.scale)
             h = self.onsager(z, h)
             z += h
-            out = self.eta[i](self.transpose(z) + x)
+            out = self.eta[i](self.shuffle(F.conv2d(z, self.transpose)) + x)
         return out
