@@ -26,7 +26,6 @@ class LOAMP(nn.Module):
         self.eta = nn.Sequential(
             BasicBlock(in_channels, n_channels),
             ResidualBlock(n_channels),
-            ResidualBlock(n_channels),
             BasicBlock(n_channels, in_channels)
         )
         self.onsager = RNNCell(cs_channels)

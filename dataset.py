@@ -12,7 +12,7 @@ ycbcr_from_rgb = torch.tensor([[    65.481,   128.553,    24.966],
                                [   -37.797,   -74.203,     112.0],
                                [     112.0,   -93.786,   -18.214]])
 def rgb2ycbcr(rgb):
-    arr = rgb.float() / 255.0 @ ycbcr_from_rgb.transpose(1,0)
+    arr = torch.mul(rgb.float() / 255.0, ycbcr_from_rgb.transpose(1,0))
     arr[..., 0] += 16
     arr[..., 1] += 128
     arr[..., 2] += 128
