@@ -42,8 +42,8 @@ class LOAMP(nn.Module):
         h = torch.zeros_like(y).to(x.device)
         for i in range(self.stages):
             z = y - F.conv2d(x, phi, stride=self.scale)
-            h = self.onsager(z, h)
-            z += h
+            # h = self.onsager(z, h)
+            # z += h
             out = self.shuffle(F.conv2d(z, self.transpose.to(z.device))) + x
-            out = out + self.eta[i](out)
+            out = out + self.eta[0](out)
         return out
