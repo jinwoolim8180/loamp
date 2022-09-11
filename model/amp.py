@@ -24,13 +24,14 @@ class LOAMP(nn.Module):
             nn.PixelShuffle(scale)
         )
         self.eta = nn.ModuleList([])
-        self.eta.append(
-            nn.Sequential(
-                BasicBlock(in_channels, n_channels),
-                ResidualBlock(n_channels),
-                BasicBlock(n_channels, in_channels)
+        for i in range(self.stages):
+            self.eta.append(
+                nn.Sequential(
+                    BasicBlock(in_channels, n_channels),
+                    ResidualBlock(n_channels),
+                    BasicBlock(n_channels, in_channels)
+                )
             )
-        )
         self.onsager = RNNCell(cs_channels)
 
     def forward(self, x):
