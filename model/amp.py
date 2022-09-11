@@ -23,10 +23,13 @@ class LOAMP(nn.Module):
             nn.Conv2d(cs_channels, in_channels * scale * scale, kernel_size=1),
             nn.PixelShuffle(scale)
         )
-        self.eta = nn.Sequential(
-            BasicBlock(in_channels, n_channels),
-            ResidualBlock(n_channels),
-            BasicBlock(n_channels, in_channels)
+        self.eta = nn.ModuleList([])
+        self.eta.append(
+            nn.Sequential(
+                BasicBlock(in_channels, n_channels),
+                ResidualBlock(n_channels),
+                BasicBlock(n_channels, in_channels)
+            )
         )
         self.onsager = RNNCell(cs_channels)
 
@@ -39,35 +42,5 @@ class LOAMP(nn.Module):
             z = y - F.conv2d(x, self.measurement, stride=self.scale)
             h = self.onsager(z, h)
             z += h
-            out = self.eta(self.transpose(z) + x)
+            out = self.eta[i](self.transpose(z) + x)
         return out
-
-
-class AMP_Stage(nn.Module):
-    def __init__(self, in_channels, cs_channels, n_channels, scale=2, lamda=1):
-        super(AMP_Stage, self).__init__()
-        self.in_channels = in_channels
-        self.n_channels = n_channels
-        self.scale = scale
-        self.lamda = lamda
-        self.alpha = nn.Parameter(torch.ones(1), requires_grad=True)
-        self.transpose = nn.Sequential(
-            nn.Conv2d(cs_channels, in_channels * scale * scale, kernel_size=1),
-            nn.PixelShuffle(scale)
-        )
-        self.eta = nn.Sequential(
-            BasicBlock(in_channels, n_channels),
-            ResidualBlock(n_channels),
-            ResidualBlock(n_channels),
-            BasicBlock(n_channels, in_channels)
-        )
-        self.onsager = RNNCell(cs_channels)
-        self.basis = nn.Conv2d(cs_channels, cs_channels, kernel_size=1, bias=False)
-
-    def forward(self, x, y, h, measurement):
-        z = y - F.conv2d(x, measurement, stride=self.scale)
-        # h_t = self.onsager(z, h)
-        # z += self.basis(h_t)
-        h_t = None
-        out = self.eta(self.alpha.unsqueeze(1) * self.transpose(z) + x)
-        return out, h_t
