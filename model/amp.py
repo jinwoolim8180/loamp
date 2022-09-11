@@ -44,5 +44,5 @@ class LOAMP(nn.Module):
             h = self.onsager(z, h)
             z += h
             out = self.shuffle(F.conv2d(z, self.transpose.to(z.device))) + x
-            out += self.eta[i](out)
+            out = out + self.eta[i](out)
         return out
