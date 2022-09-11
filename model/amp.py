@@ -42,6 +42,6 @@ class LOAMP(nn.Module):
         for i in range(self.stages):
             # z *= self.cs_channels / (self.cs_channels * self.scale * self.scale)
             z = y - F.conv2d(out, phi, stride=self.scale)
-            out = self.shuffle(F.conv2d(z, self.transpose.to(z.device))) + out
+            out = out + self.shuffle(F.conv2d(z, self.transpose.to(z.device)))
             out = out + self.eta[i](out)
         return out
