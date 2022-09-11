@@ -40,7 +40,7 @@ class SlowDataset(Dataset):
             if not os.path.exists(bin_fname):
                 img = imageio.imread(fname)
                 np.save(bin_fname, img)
-                print(f'{bin_fname} prepared!')
+                print('{} prepared!'.format(bin_fname))
 
     def __len__(self):
         if self.training:
