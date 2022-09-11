@@ -23,6 +23,7 @@ class LOAMP(nn.Module):
         self.transpose = self.measurement.t().contiguous().view(scale * scale, cs_channels, 1, 1)
         self.shuffle = nn.PixelShuffle(scale)
         self.eta = nn.ModuleList([])
+        self.att = BasicBlock(in_channels, in_channels)
         for i in range(self.stages):
             self.eta.append(
                 nn.Sequential(
@@ -46,5 +47,5 @@ class LOAMP(nn.Module):
             z = y - F.conv2d(attention * x, phi, stride=self.scale)
             out = self.shuffle(F.conv2d(z, self.transpose.to(z.device))) + x
             out = out + self.eta[i](out)
-            attention = F.sigmoid((out - previous) * (out - previous))
+            attention = F.sigmoid(self.att(out - previous))
         return out
