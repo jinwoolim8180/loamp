@@ -53,8 +53,8 @@ def main(args):
                 l = loss(x, x_hat)
 
                 optimizer.zero_grad()
-                l.backward()
-                optimizer.step()
+                # l.backward()
+                # optimizer.step()
                 pbar.set_description("Epoch {0} - Loss: {1}".format(epoch + 1, l))
 
             # if (epoch + 1) % args.test_cycle == 0:
