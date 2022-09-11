@@ -26,10 +26,10 @@ class LOAMP(nn.Module):
         for i in range(self.stages):
             self.eta.append(
                 nn.Sequential(
-                    BasicBlock(in_channels, n_channels),
-                    ResidualBlock(n_channels),
-                    ResidualBlock(n_channels),
-                    BasicBlock(n_channels, in_channels)
+                    BasicBlock(cs_channels, n_channels, kernel_size=1),
+                    ResidualBlock(n_channels, kernel_size=1),
+                    ResidualBlock(n_channels, kernel_size=1),
+                    BasicBlock(n_channels, cs_channels, kernel_size=)
                 )
             )
 
@@ -42,6 +42,7 @@ class LOAMP(nn.Module):
         for i in range(self.stages):
             # z *= self.cs_channels / (self.cs_channels * self.scale * self.scale)
             z = y - F.conv2d(x, phi, stride=self.scale)
+            z = z + self.eta[0](out)
             out = self.shuffle(F.conv2d(z, self.transpose.to(z.device))) + x
             # out = out + self.eta[0](out)
         return out
