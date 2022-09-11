@@ -20,7 +20,8 @@ class LOAMP(nn.Module):
 
         self.measurement = nn.Parameter(torch.randn(cs_channels, scale * scale * in_channels),
                                         requires_grad=False)
-        self.transpose = self.measurement.t().contiguous().view(scale * scale, cs_channels, 1, 1)
+        self.transpose = self.measurement.t().contiguous().view(scale * scale, cs_channels, 1, 1)\
+            .to(self.measurement.device)
         self.shuffle = nn.PixelShuffle(scale)
         self.eta = nn.ModuleList([])
         for i in range(self.stages):
