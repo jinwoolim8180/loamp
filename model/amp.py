@@ -29,7 +29,6 @@ class LOAMP(nn.Module):
             BasicBlock(n_channels, in_channels)
         )
         self.onsager = RNNCell(cs_channels)
-        # self.basis = nn.Conv2d(cs_channels, cs_channels, kernel_size=1, bias=False)
 
     def forward(self, x):
         y = F.conv2d(x, self.measurement, stride=self.scale)
