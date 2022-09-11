@@ -42,10 +42,8 @@ class LOAMP(nn.Module):
         z = torch.zeros_like(y).to(x.device)
         attention = torch.ones_like(x).to(x.device)
         for i in range(self.stages):
-            previous = out
             # z *= self.cs_channels / (self.cs_channels * self.scale * self.scale)
             z = y - F.conv2d(attention * x, phi, stride=self.scale)
             out = self.shuffle(F.conv2d(z, self.transpose.to(z.device))) + x
-            out = out + self.eta[i](out)
-            attention = F.sigmoid(self.att(out - previous))
+            out = out + self.eta[0](out)
         return out
