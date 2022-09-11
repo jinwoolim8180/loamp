@@ -31,10 +31,12 @@ def main(args):
     test_dataloader = DataLoader(dataset=test_dataset, batch_size=args.batch_size, num_workers=args.num_workers)
 
     ssim = SSIM(args.in_channels)
+    mse = nn.MSELoss()
 
     with torch.no_grad():
         psnr_loss = 0
         ssim_loss = 0
+        mse_loss = 0
         num = 0
         pbar = tqdm(test_dataloader)
         for i, data in enumerate(pbar):
@@ -44,13 +46,16 @@ def main(args):
 
             psnr_loss += psnr(x, x_hat)
             ssim_loss += ssim(x, x_hat)
+            mse_loss += mse(x, x_hat)
+
             num += 1
 
             pbar.set_description("PSNR: {0}, SSIM: {1}".format(psnr_loss, ssim_loss))
 
         psnr_loss /= num
         ssim_loss /= num
-        print("PSNR: {0} / SSIM: {1}".format(psnr_loss, ssim_loss))
+        mse_loss /= num
+        print("PSNR: {0} / SSIM: {1} / MSE: {2}".format(psnr_loss, ssim_loss, mse_loss))
 
 
 if __name__ == '__main__':
